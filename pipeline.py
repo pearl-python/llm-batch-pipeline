@@ -82,3 +82,9 @@ def send_prompt(prompt):
         else:
             print(f"APIステータスコードエラー:{response.status_code}")
             return None
+
+def create_result_dataframe(results):
+    return pd.DataFrame(results)
+
+def save_csv(df, file_name):
+    df.to_csv(file_name, index=False)
