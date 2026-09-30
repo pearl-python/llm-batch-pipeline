@@ -49,7 +49,7 @@ def send_prompt(prompt):
 
     if not api_url or not model:
         print("API設定がありません")
-        return None
+        return None, "failed", "API設定がありません"
 
     data = {
         "model": model,
@@ -69,19 +69,19 @@ def send_prompt(prompt):
         )
     except requests.RequestException as e:
         print(f"API通信に失敗しました:{e}")
-        return None
+        return None, "failed", f"API通信に失敗しました:{e}"
     else:
         if response.status_code == 200:
             try:
                 result = response.json()
             except requests.exceptions.JSONDecodeError as e:
                 print(f"JSON解析エラー:{e}")
-                return None
+                return None, "failed", f"JSON解析エラー:{e}"
             else:
-                return result["choices"][0]["message"]["content"]
+                return result["choices"][0]["message"]["content"], "success", None
         else:
             print(f"APIステータスコードエラー:{response.status_code}")
-            return None
+            return None, "failed", f"APIステータスコードエラー:{response.status_code}"
 
 def create_result_dataframe(results):
     return pd.DataFrame(results)
